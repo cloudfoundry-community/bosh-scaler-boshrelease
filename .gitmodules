@@ -1,0 +1,3 @@
+[submodule "src/bosh-scaler"]
+	path = src/bosh-scaler
+	url = https://github.com/nttlabs/bosh-scaler.git

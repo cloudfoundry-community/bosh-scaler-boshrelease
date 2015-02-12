@@ -1,0 +1,5 @@
+check process bosh-scaler
+  with pidfile /var/vcap/sys/run/bosh-scaler/pid
+  start program "/var/vcap/jobs/bosh-scaler/bin/ctl start"
+  stop program "/var/vcap/jobs/bosh-scaler/bin/ctl stop"
+  group vcap

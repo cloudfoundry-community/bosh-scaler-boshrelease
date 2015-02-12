@@ -1,0 +1,8 @@
+---
+name: bosh-scaler
+
+dependencies:
+- ruby
+
+files:
+- bosh-scaler/**/*

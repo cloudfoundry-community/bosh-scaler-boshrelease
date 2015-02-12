@@ -1,0 +1,66 @@
+---
+name: "bosh-scaler"
+director_uuid: "YOUR_BOHS_DIRECTOR_UUID"
+
+releases:
+ - name: bosh-scaler
+   version: latest
+
+# BOSH configuration
+compilation:
+  workers: 2
+  network: default
+  reuse_compilation_vms: true
+  cloud_properties:
+    instance_type: m1.small
+
+update:
+  canaries: 1
+  canary_watch_time: 30000-300000
+  update_watch_time: 30000-300000
+  max_in_flight: 4
+  max_errors: 1
+
+# Network configuration (the same as in CF)
+networks:
+- name: floating
+  type: vip
+  cloud_properties: {}
+- name: default
+  type: dynamic
+  cloud_properties:
+    security_groups: ['open']
+
+# Pull for your databases and infrastructure nodes
+resource_pools:
+  - name: small
+    network: default
+    size: 1
+    stemcell:
+      name: bosh-openstack-kvm-ubuntu-trusty-go_agent
+      version: 2657
+    cloud_properties:
+      instance_type: m1.small
+
+jobs:
+  - name: core
+    template: bosh-scaler
+    release: bosh-scaler
+    instances: 1
+    resource_pool: small
+    networks:
+      - name: default
+        default: [dns, gateway]
+      - name: floating
+        static_ips:
+          - 192.168.1.10
+
+properties:
+  bosh:  
+    user: scaler
+    password: scaler
+    address: 192.168.1.20
+    nats:
+      user: nats
+      password: nats
+      port: 4222

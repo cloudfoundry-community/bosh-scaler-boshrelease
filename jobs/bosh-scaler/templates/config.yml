@@ -1,0 +1,29 @@
+---
+# BOSH NATS settings
+nats: &nats
+  uri: mbus://<%= p("bosh.address") %>:<%= p("bosh.nats.port") %>
+  user: <%= p("bosh.nats.user") %>
+  pass: <%= p("bosh.nats.password") %>
+
+# BOSH Director REST API settings
+rest: &rest
+  endpoint_uri: https://<%= p("bosh.address") %>:<%= p("bosh.port") %>
+  user: <%= p("bosh.user") %>
+  password: <%= p("bosh.password") %>
+  disable_verify_certification: true
+
+collectors:
+  - class: BoshNatsCollector
+    bosh_nats: *nats
+    bosh_rest: *rest
+  - class: CfVarzTsdbCollector # Optional for CF
+    port: 4567
+
+listeners:
+  - class: BoshScaler
+    bosh_rest: *rest
+    interval: 60 # seconds
+    buffer_size: 1000
+    ui:
+      enable: true
+      port: 8888
