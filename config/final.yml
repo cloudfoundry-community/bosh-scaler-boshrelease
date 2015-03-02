@@ -1,6 +1,5 @@
 ---
 blobstore:
-  provider: local
+  provider: s3
   options:
-    blobstore_path: /tmp/scalerblobs
-final_name: bosh-scaler
+    bucket_name: bosh-scaler-boshrelease
